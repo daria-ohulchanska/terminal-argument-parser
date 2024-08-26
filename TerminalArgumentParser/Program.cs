@@ -1,4 +1,5 @@
-﻿using TerminalArgumentParser;
+﻿using Newtonsoft.Json;
+using TerminalArgumentParser;
 
 public class Program
 {
@@ -10,25 +11,7 @@ public class Program
         Console.WriteLine("--------------");
         Console.WriteLine("Arguments object");
         Console.WriteLine();
-
-        // Use the parsed arguments
-        for (int i = 0; i < arguments.Repeat; i++)
-        {
-            string message = $"Hello, {arguments.Name ?? "World"}!";
-
-            if (arguments.Capitalize)
-                message.ToUpper();
-
-            if (arguments.Verbose)
-            {
-                Console.WriteLine($"Iteration {i + 1}: {message}");
-            }
-            else
-            {
-                Console.WriteLine(message);
-            }
-        }
-
+        Console.WriteLine(arguments == null ? "null" : JsonConvert.SerializeObject(arguments));
 
         // Parse command-line arguments into key-value list
         var parsedArguments = ArgumentParser.Parse(args);
@@ -36,10 +19,6 @@ public class Program
         Console.WriteLine("--------------");
         Console.WriteLine("Key-value list");
         Console.WriteLine();
-
-        foreach (var argument in parsedArguments)
-        {
-            Console.WriteLine($"{argument.Key} - {argument.Value}");
-        }
+        Console.WriteLine(JsonConvert.SerializeObject(parsedArguments));
     }
 }
