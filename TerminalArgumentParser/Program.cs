@@ -1,24 +1,24 @@
-﻿using Newtonsoft.Json;
-using TerminalArgumentParser;
+﻿using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Logging;
+using TerminalArgumentParser.Interfaces;
+using TerminalArgumentParser.Services.Parsers;
 
 public class Program
 {
     public static void Main(string[] args)
     {
-        // Parse fixed command-line arguments into an Arguments object
-        var arguments = FixedArgumentParser.Parse<Arguments>(args);
-
-        Console.WriteLine("--------------");
-        Console.WriteLine("Arguments object");
-        Console.WriteLine();
-        Console.WriteLine(arguments == null ? "null" : JsonConvert.SerializeObject(arguments));
-
-        // Parse command-line arguments into key-value list
-        var parsedArguments = ArgumentParser.Parse(args);
-
-        Console.WriteLine("--------------");
-        Console.WriteLine("Key-value list");
-        Console.WriteLine();
-        Console.WriteLine(JsonConvert.SerializeObject(parsedArguments));
+        var host = Host.CreateDefaultBuilder(args)
+            .ConfigureServices((_, services) =>
+            {
+                services.AddScoped<IParser<Dictionary<string, string>>, ArgumentParser>();
+            })
+            .ConfigureLogging(logging =>
+            {
+                logging.ClearProviders();
+                logging.AddConsole();
+                logging.SetMinimumLevel(LogLevel.Information);
+            })
+            .Build();
     }
 }

@@ -1,6 +1,7 @@
 ﻿using FluentAssertions;
+using TerminalArgumentParser.Services.Parsers;
 
-namespace TerminalArgumentParser.Tests
+namespace TerminalArgumentParser.Tests.Services
 {
     public class ArgumentParserTests
     {
@@ -9,7 +10,8 @@ namespace TerminalArgumentParser.Tests
         {
             string[] args = new string[0];
 
-            var result = ArgumentParser.Parse(args);
+            var parser = new ArgumentParser();
+            var result = parser.Parse(args);
 
             result.Should().BeEmpty();
         }
@@ -19,7 +21,8 @@ namespace TerminalArgumentParser.Tests
         {
             string[] args = new[] { "--name", "Bella" };
 
-            var result = ArgumentParser.Parse(args);
+            var parser = new ArgumentParser();
+            var result = parser.Parse(args);
 
             result.Should().ContainKey("name").WhoseValue.Should().Be("Bella");
         }
@@ -29,7 +32,8 @@ namespace TerminalArgumentParser.Tests
         {
             string[] args = new[] { "--name", "Bella", "--age", "30" };
 
-            var result = ArgumentParser.Parse(args);
+            var parser = new ArgumentParser();
+            var result = parser.Parse(args);
 
             result.Should().HaveCount(2)
                 .And.Contain(new KeyValuePair<string, string>("name", "Bella"))
@@ -41,7 +45,8 @@ namespace TerminalArgumentParser.Tests
         {
             string[] args = new[] { "--verbose" };
 
-            var result = ArgumentParser.Parse(args);
+            var parser = new ArgumentParser();
+            var result = parser.Parse(args);
 
             result.Should().ContainKey("verbose").WhoseValue.Should().BeEmpty();
         }
@@ -51,7 +56,8 @@ namespace TerminalArgumentParser.Tests
         {
             string[] args = new[] { "--name", "Bella", "--verbose", "--age", "30" };
 
-            var result = ArgumentParser.Parse(args);
+            var parser = new ArgumentParser();
+            var result = parser.Parse(args);
 
             result.Should().HaveCount(3)
                 .And.Contain(new KeyValuePair<string, string>("name", "Bella"))

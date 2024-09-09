@@ -1,6 +1,8 @@
 ﻿using FluentAssertions;
+using TerminalArgumentParser.Models;
+using TerminalArgumentParser.Services.Parsers;
 
-namespace TerminalArgumentParser.Tests
+namespace TerminalArgumentParser.Tests.Services
 {
     public class FixedArgumentParserTests
     {
@@ -9,7 +11,8 @@ namespace TerminalArgumentParser.Tests
         {
             string[] args = new[] { "--name", "John", "--repeat", "3" };
 
-            var result = FixedArgumentParser.Parse<Arguments>(args);
+            var parser = new FixedArgumentParser<Arguments>();
+            var result = parser.Parse(args);
 
             result.Should().NotBeNull();
             result.Name.Should().Be("John");
@@ -23,7 +26,8 @@ namespace TerminalArgumentParser.Tests
         {
             string[] args = new[] { "--verbose", "--capitalize" };
 
-            var result = FixedArgumentParser.Parse<Arguments>(args);
+            var parser = new FixedArgumentParser<Arguments>();
+            var result = parser.Parse(args);
 
             result.Should().NotBeNull();
             result.Verbose.Should().BeTrue();
@@ -37,7 +41,8 @@ namespace TerminalArgumentParser.Tests
         {
             string[] args = new[] { "--name" };
 
-            var result = FixedArgumentParser.Parse<Arguments>(args);
+            var parser = new FixedArgumentParser<Arguments>();
+            var result = parser.Parse(args);
 
             result.Should().BeNull();
         }
@@ -47,7 +52,8 @@ namespace TerminalArgumentParser.Tests
         {
             string[] args = new[] { "--unknown" };
 
-            var result = FixedArgumentParser.Parse<Arguments>(args);
+            var parser = new FixedArgumentParser<Arguments>();
+            var result = parser.Parse(args);
 
             result.Should().BeNull();
         }
@@ -57,7 +63,8 @@ namespace TerminalArgumentParser.Tests
         {
             string[] args = new[] { "--name", "Alice", "--verbose", "--repeat", "5" };
 
-            var result = FixedArgumentParser.Parse<Arguments>(args);
+            var parser = new FixedArgumentParser<Arguments>();
+            var result = parser.Parse(args);
 
             result.Should().NotBeNull();
             result.Name.Should().Be("Alice");

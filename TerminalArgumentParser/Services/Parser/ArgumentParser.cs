@@ -1,8 +1,10 @@
-﻿namespace TerminalArgumentParser
+﻿using TerminalArgumentParser.Interfaces;
+
+namespace TerminalArgumentParser.Services.Parsers
 {
-    public static class ArgumentParser
+    public class ArgumentParser : IParser<Dictionary<string, string>>
     {
-        public static Dictionary<string, string> Parse(string[] args)
+        public Dictionary<string, string> Parse(string[] args)
         {
             var result = new Dictionary<string, string>();
 

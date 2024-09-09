@@ -1,10 +1,12 @@
 ﻿using System.Reflection;
+using TerminalArgumentParser.Interfaces;
+using TerminalArgumentParser.Models;
 
-namespace TerminalArgumentParser
+namespace TerminalArgumentParser.Services.Parsers
 {
-    public static class FixedArgumentParser
+    public class FixedArgumentParser<T> : IParser<T> where T : new()
     {
-        public static T Parse<T>(string[] args) where T : new()
+        public T Parse(string[] args)
         {
             T result = new T();
             PropertyInfo[] properties = typeof(T).GetProperties();
@@ -44,43 +46,6 @@ namespace TerminalArgumentParser
             }
 
             return result;
-        }
-    }
-
-    public class Arguments
-    {
-        [Option("--name")]
-        public string Name { get; set; }
-
-        [Option("--repeat")]
-        public int Repeat { get; set; } = 1;
-
-        [Flag("--verbose")]
-        public bool Verbose { get; set; }
-
-        [Flag("--capitalize")]
-        public bool Capitalize { get; set; }
-    }
-
-    [AttributeUsage(AttributeTargets.Property, AllowMultiple = false)]
-    public class FlagAttribute : Attribute
-    {
-        public string Name { get; }
-
-        public FlagAttribute(string name)
-        {
-            Name = name;
-        }
-    }
-
-    [AttributeUsage(AttributeTargets.Property, AllowMultiple = false)]
-    public class OptionAttribute : Attribute
-    {
-        public string Name { get; }
-
-        public OptionAttribute(string name)
-        {
-            Name = name;
         }
     }
 }
