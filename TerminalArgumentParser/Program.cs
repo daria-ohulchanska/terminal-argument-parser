@@ -12,17 +12,9 @@ public class Program
         var host = CreateHostBuilder(args).Build();
 
         var parser = host.Services.GetRequiredService<IParser<Dictionary<string, string>>>();
-        
-        using var loggerFactory = LoggerFactory.Create(builder =>
-        {
-            builder
-                .AddFilter("Microsoft", LogLevel.Warning)
-                .AddFilter("System", LogLevel.Warning)
-                .AddConsole();
-        });
+        var logger = host.Services.GetRequiredService<ILogger<Program>>();
 
-        ILogger logger = loggerFactory.CreateLogger<Program>();
-
+        logger.LogInformation("Starting argument parsing");
         var parsed = parser.Parse(args);
         logger.LogInformation("Parsed arguments: {Arguments}", parsed);
     }
@@ -33,11 +25,16 @@ public class Program
             {
                 services.AddScoped<IParser<Dictionary<string, string>>, ArgumentParser>();
                 services.AddScoped<IParser<Arguments>, FixedArgumentParser<Arguments>>();
-            })
-            .ConfigureLogging(logging =>
-            {
-                logging.ClearProviders();
-                logging.AddSimpleConsole(options => options.IncludeScopes = true);
-                logging.AddEventLog();
+                services.AddLogging(logging =>
+                {
+                    logging.ClearProviders();
+                    logging.AddSimpleConsole(options =>
+                    {
+                        options.IncludeScopes = true;
+                        options.SingleLine = true;
+                        options.TimestampFormat = "yyyy-MM-dd HH:mm:ss ";
+                    });
+                    logging.SetMinimumLevel(LogLevel.Information);
+                });
             });
     }
